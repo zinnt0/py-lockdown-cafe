@@ -6,18 +6,19 @@ from app.cafe import Cafe
 def go_to_cafe(friends: list, cafe: Cafe) -> None:
 
     masks_to_buy = 0
+    has_vaccine_issue = False
 
     for friend in friends:
-        # if not friend.get("wearing_a_mask", False):
-        #     masks_to_buy += 1
-
         try:
             cafe.visit_cafe(friend)
         except (NotVaccinatedError, OutdatedVaccineError):
-            return "All friends should be vaccinated"
+            has_vaccine_issue = True
         except NotWearingMaskError:
             masks_to_buy += 1
 
-    if masks_to_buy > 0:
+    if has_vaccine_issue:
+        return "All friends should be vaccinated"
+    elif masks_to_buy > 0:
         return f"Friends should buy {masks_to_buy} masks"
-    return f"Friends can go to {cafe.name}"
+    else:
+        return f"Friends can go to {cafe.name}"
